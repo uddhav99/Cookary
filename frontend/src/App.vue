@@ -46,6 +46,7 @@
     <v-main class="blue lighten-4">
       <v-container>
         <v-row>
+          <!--
           <v-col cols="2">
             <v-sheet rounded="lg">
               <v-list color="transparent">
@@ -76,10 +77,10 @@
               </v-list>
             </v-sheet>
           </v-col>
-
+          < Main Content -->
           <v-col>
             <v-sheet
-              min-height="80vh"
+              min-height="50vh"
               rounded="lg"
             >
               <Tab1 v-if="tab == '0'"/>
