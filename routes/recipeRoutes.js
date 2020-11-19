@@ -6,9 +6,6 @@ const CircularJSON = require('circular-json');
 
 module.exports = (app) => {
     /*
-    have to test what happens when ingredientList or cuisine or something is undefined, what does the first req give us
-    */
-    /*
         Frontend for filters 
         1. maxReadyTime
         2. diet
@@ -87,7 +84,8 @@ module.exports = (app) => {
         var finalRecipeArray = recipeArray.concat(secondRecipeArray);
         console.log(finalRecipeArray);
 
-        let ids = "829274,184747"; // to get from finalRecipeArray -> have to make a string like this
+        let ids = finalRecipeArray.join(','); // converting array of ID's to a string for next query
+
         try {
             let recipeInfoUrl = `https://api.spoonacular.com/recipes/informationBulk?includeNutrition=false&apiKey=${keys.spoonacularKey}&ids=${ids}`;
             const recipeData = await axios({
