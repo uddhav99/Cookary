@@ -5,10 +5,13 @@ const CircularJSON = require('circular-json');
 
 
 module.exports = (app) => {
-    
-    app.get('/api/search', async (req, res) => {
-        console.log("endpoint working");
+    /*
+    have to test what happens when ingredientList or cuisine or something is undefined, what does the first req give us
+    */
 
+    app.get('/search', async (req, res) => {
+        console.log("endpoint working");
+        console.log(req.query); // will get the following from frontend like this
         /*
         Frontend for filters 
         1. maxReadyTime
@@ -20,34 +23,59 @@ module.exports = (app) => {
         1. Chicken
         2. Indian
         3. Vegetarian
-        4. Seafood
-        5. Beef
-        6. Asian
+        4. Beef
+        5. Asian
         */
 
-        let ingredientList = "carrots,potatoes,onion"; // needs to be given from the front end -> need to create a string like this
-        let cuisine = "";
-        let maxReadyTime = "";
-        let diet = "";
+        let ingredientList = ""; // if undefined set to ""
+        let cuisine = "Indian"; // if undefined set to ""
+        let maxReadyTime = "1000"; // need to set this to "1000" if undefined
+        let diet = ""; // if undefined set to ""
 
-        let ingredientSearchUrl = `https://api.spoonacular.com/recipes/complexSearch?includeIngredients=${ingredientList}&maxReadyTime=${maxReadyTime}&diet=${diet}&number=5&ignorePantry=true&cuisine=${cuisine}&apiKey=${keys.spoonacularKey}`;
+        let ingredientSearchUrl = `https://api.spoonacular.com/recipes/complexSearch?includeIngredients=${ingredientList}&diet=${diet}&maxReadyTime=${maxReadyTime}&number=10&ignorePantry=true&cuisine=${cuisine}&apiKey=${keys.spoonacularKey}`;
 
+        var recipeArray = [];
         try {
             const ingredientSearchResult = await axios({
                 method: 'get',
                 url: ingredientSearchUrl
             }); 
+            console.log("first recipe search running");
             console.log(ingredientSearchResult.data.results);
-            var recipeArray = ingredientSearchResult.data.results.map(info => {
+            recipeArray = ingredientSearchResult.data.results.map(info => {
                 return info.id;
             });
         } catch (err) {
-            console.log("error in finding recipe ID ", err);
+            console.log("error in first recipe search ", err);
         }
 
         console.log(recipeArray);
 
-        let ids = "829274,184747"; // to get from fist API Call -> have to make a string like this
+        // if we get less than 5 recipes from our first API call, then return recipes including only the ingredients and not the specific parameters
+        var secondRecipeArray = [];
+        if (recipeArray.length < 5) {
+            let ingredients = "Beef,Onion";
+            let ingredientUrl = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=5&ignorePantry=true&apiKey=${keys.spoonacularKey}`;
+
+            try {
+                const ingredientResult = await axios({
+                    method: 'get',
+                    url: ingredientUrl
+                }); 
+                console.log("second recipe search running");
+                console.log(ingredientResult.data);
+                secondRecipeArray = ingredientResult.data.map(info => {
+                    return info.id;
+                });
+            } catch (err) {
+                console.log("error in second recipe search ", err);
+            }
+        } 
+
+        var finalRecipeArray = recipeArray.concat(secondRecipeArray);
+        console.log(finalRecipeArray);
+
+        let ids = "829274,184747"; // to get from finalRecipeArray -> have to make a string like this
         try {
             let recipeInfoUrl = `https://api.spoonacular.com/recipes/informationBulk?includeNutrition=false&apiKey=${keys.spoonacularKey}&ids=${ids}`;
             const recipeData = await axios({
