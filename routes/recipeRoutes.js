@@ -8,11 +8,7 @@ module.exports = (app) => {
     /*
     have to test what happens when ingredientList or cuisine or something is undefined, what does the first req give us
     */
-
-    app.get('/search', async (req, res) => {
-        console.log("endpoint working");
-        console.log(req.query); // will get the following from frontend like this
-        /*
+    /*
         Frontend for filters 
         1. maxReadyTime
         2. diet
@@ -25,13 +21,29 @@ module.exports = (app) => {
         3. Vegetarian
         4. Beef
         5. Asian
-        */
+    */
+
+    app.get('/search', async (req, res) => {
+        console.log("endpoint working");
 
         let ingredientList = ""; // if undefined set to ""
-        let cuisine = "Indian"; // if undefined set to ""
-        let maxReadyTime = "1000"; // need to set this to "1000" if undefined
+        let cuisine = ""; // if undefined set to ""
+        let maxReadyTime = "1000"; // if undefined set to "1000"
         let diet = ""; // if undefined set to ""
 
+        if (typeof req.query.cuisine !== 'undefined') {
+            cuisine = req.query.cuisine;
+        }
+        if (typeof req.query.ingredients !== 'undefined') {
+            ingredientList = req.query.ingredients;
+        }
+        if (typeof req.query.maxReadyTime !== 'undefined') {
+            maxReadyTime = req.query.maxReadyTime;
+        }
+        if (typeof req.query.diet !== 'undefined') {
+            diet = req.query.diet;
+        }
+        
         let ingredientSearchUrl = `https://api.spoonacular.com/recipes/complexSearch?includeIngredients=${ingredientList}&diet=${diet}&maxReadyTime=${maxReadyTime}&number=10&ignorePantry=true&cuisine=${cuisine}&apiKey=${keys.spoonacularKey}`;
 
         var recipeArray = [];
