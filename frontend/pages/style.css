@@ -1,0 +1,73 @@
+* 
+{
+    font-family: 'Oswald', sans-serif;
+}
+
+.header
+{
+    text-align: center;
+    padding: 0px;
+    background-color: white;
+}
+
+.header h1
+{
+    font-size: 60px;
+    padding: 0px;
+}
+
+.table_custom
+{
+    text-align: center;
+}
+
+.table_custom tr th
+{
+    background-color: orange;
+    font-size: 30px;
+    font-weight: normal;
+    padding: 0px;
+}
+
+.table_custom tr td 
+{
+    border: none;
+    padding: 5px 0px 5px 0px;
+}
+
+.confirm_div 
+{
+    text-align: center;
+}
+
+.confirm_div button
+{
+    background-color: orange;
+    border-color: orange;
+    color: black;
+    font-size: 20px;
+}
+
+.confirm_div button:hover
+{
+    background-color: #ff8c00;
+    border-color: orange;
+    color: black;
+}
+
+.clickable_entry button
+{
+    background-color: orange;
+    border-color: orange;
+    color: black;
+    width: 100%;
+    font-size: 30px;
+}
+
+
+.clickable_entry button:hover
+{
+    background-color: #ff8c00;
+    border-color: orange;
+    color: black;
+}

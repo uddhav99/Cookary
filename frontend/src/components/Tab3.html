@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add Filters</title>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!-- demo root element --!>
+    <div id="demo">
+      <!-- logo and back button --!>
+      <div class="row">
+        <div class="col-sm-1"></div> <!-- blank --!>
+        <div class="col-sm-2">
+          <img src="CookaryLogo.png" class="img-fluid">
+        </div>
+      </div>
+
+      <!-- header --!>
+      <div class="jumbotron header">
+          <h1>Add Filters</h1>
+      </div>
+
+      <!-- options --!>
+      <div class="row">
+        <div class="col-sm-1"></div> <!-- blank --!>
+
+        <div class="col-sm" v-for="column in columns">
+          <table class="table table_custom">
+            <thead>
+              <tr>
+                  <th> {{ column.title }} </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="entry, index in column.entries">
+                <td> 
+                <input type="checkbox" @click="function(){column.bools[index] = !column.bools[index];}" id="checkbox" class="form-check-input">
+                <label for="checkbox" class="form-check-label">{{ entry }}</label>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="col-sm-1"></div> <!-- blank --!>
+      </div>
+      
+      <!-- confirm button --!>
+      <div class = "row">
+        <div class="col-sm"></div> <!-- blank --!>
+        <div class="col-sm-4 confirm_div">
+            <button class="btn btn-primary">Confirm</button>
+        </div>
+        <div class="col-sm"></div> <!-- blank --!>
+      </div>
+    </div>
+
+    <script>
+      // bootstrap the demo
+      var demo = new Vue({
+        el: "#demo",
+        data: {
+          searchQuery: "",
+          columns : [
+            {title: "Time", entries: ["< 60 minutes", "< 90 minutes", "< 120 minutes", "> 120 minutes"], bools: [false, false, false, false, false]},
+            {title: "Cuisine", entries: ["Indian", "Italian", "American", "Chinese", "Thai"], bools: [false, false, false, false, false]}, 
+            {title: "Protein", entries: ["Chicken", "Beef", "Tofu", "Seafood", "Tofu"], bools: [false, false, false, false, false]},
+            {title: "Carbs", entries: ["Rice", "Bread", "Pasta"], bools: [false, false, false]},
+            {title: "Vegetable", entries: ["Carrots", "Peppers", "Onions"], bools: [false, false, false]},
+          ],
+        }
+      });
+    </script>
+
+    <!-- Jquery and bootstrap --!>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  </body>
+</html>
