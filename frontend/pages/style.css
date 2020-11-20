@@ -71,3 +71,18 @@
     border-color: orange;
     color: black;
 }
+
+.recipe_entry 
+{
+    margin-bottom: 100px;
+}
+
+.recipe_entry a
+{
+    color: black;
+}
+
+.back 
+{
+    width: 50px;
+}

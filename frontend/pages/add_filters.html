@@ -13,9 +13,11 @@
     <div id="demo">
       <!-- logo and back button --!>
       <div class="row">
-        <div class="col-sm-1"></div> <!-- blank --!>
+        <div class="ml-5 col-sm-1">
+          <a href="front_page.html"><img src="images/back.png" class="img-fluid back"></a>
+        </div>
         <div class="col-sm-2">
-          <img src="images/CookaryLogo.png" class="img-fluid">
+          <a href="front_page.html"><img src="images/CookaryLogo.png" class="img-fluid"></a>
         </div>
       </div>
 
@@ -53,7 +55,7 @@
       <div class = "row">
         <div class="col-sm"></div> <!-- blank --!>
         <div class="col-sm-4 confirm_div">
-            <button class="btn btn-primary" @click="confirm_fun">Confirm</button>
+            <button class="btn btn-primary" onclick="confirm_fun()">Confirm</button>
         </div>
         <div class="col-sm"></div> <!-- blank --!>
       </div>
@@ -66,17 +68,54 @@
         data: {
           searchQuery: "",
           columns : [
-            {title: "Time", entries: ["< 60 minutes", "< 90 minutes", "< 120 minutes", "> 120 minutes"], bools: [false, false, false, false, false]},
+            {title: "Time", entries: ["< 60 minutes", "< 90 minutes", "< 120 minutes", "> 120 minutes"], bools: [false, false, false, false], raw: ["60", "90", "120", "600"]},
             {title: "Cuisine", entries: ["Indian", "Italian", "American", "Chinese", "Thai"], bools: [false, false, false, false, false]}, 
             {title: "Protein", entries: ["Chicken", "Beef", "Tofu", "Seafood", "Tofu"], bools: [false, false, false, false, false]},
             {title: "Carbs", entries: ["Rice", "Bread", "Pasta"], bools: [false, false, false]},
             {title: "Vegetable", entries: ["Carrots", "Peppers", "Onions"], bools: [false, false, false]},
           ],
-          confirm_fun: function () {
-              console.log("HI");
-          },
         }
       });
+      confirm_fun = function () {
+        maxReadyTime = "600";
+        for(const index in demo.columns[0].bools)
+        {
+            if(demo.columns[0].bools[index])
+                maxReadyTime = demo.columns[0].raw[index];
+        }
+
+        cuisine = ""
+        for(const index in demo.columns[1].bools)
+        {
+            if(demo.columns[1].bools[index])
+                cuisine = demo.columns[1].entries[index];
+        }
+
+        ingredients = ""
+        for (col = 2; col < demo.columns.length; col++) 
+        {
+            for(const index in demo.columns[col].bools)
+            {
+                if(demo.columns[col].bools[index])
+                    ingredients += demo.columns[col].entries[index] + ",";
+            }
+        }
+        if(ingredients.length > 0)
+            ingredients = ingredients.substring(0, ingredients.length - 1);
+
+        let url = new URL('http://localhost:8000/search');
+        url.search = new URLSearchParams({
+            cuisine: cuisine, 
+            ingredients: ingredients,
+            maxReadyTime: maxReadyTime
+        });
+        fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            localStorage.setItem('RECIPE_LIST', JSON.stringify(data));
+            document.location.href = "your_recipes.html";
+        });
+      }
     </script>
 
     <!-- Jquery and bootstrap --!>

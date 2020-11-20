@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Signature Recipes</title>
+    <title>Your Recipes</title>
     <script src="https://unpkg.com/vue"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
@@ -14,7 +14,7 @@
       <!-- logo and back button --!>
       <div class="row">
         <div class="ml-5 col-sm-1">
-          <a href="front_page.html"><img src="images/back.png" class="img-fluid back"></a>
+          <a href="add_filters.html"><img src="images/back.png" class="img-fluid back"></a>
         </div>
         <div class="col-sm-2">
           <a href="front_page.html"><img src="images/CookaryLogo.png" class="img-fluid"></a>
@@ -23,34 +23,19 @@
 
       <!-- header --!>
       <div class="jumbotron header">
-          <h1>Signature Recipes</h1>
+          <h1>Your Recipes</h1>      
       </div>
 
       <!-- options --!>
-      <div class="row">
-        <div class="col-sm-1"></div> <!-- blank --!>
-
-        <div class="col-sm" v-for="(_, name) in columns">
-          <table class="table table_custom">
-            <thead>
-              <tr>
-            <div class="clickable_entry">
-                <button class="btn btn-primary" @click="function(){img_name = name;}">{{name}}</button>
-            </div>
-              </tr>
-            </thead>
-          </table>
+      <div class="row recipe_entry" style="text-align:center;" v-for="recipe in recipes">
+        <div class="col-sm-2"></div> <!-- blank --!>
+        <div class="col-sm">
+            <a :href="recipe.url" target="_blank">
+              <h1 class = "h1">{{ recipe.title }} </h1>
+              <img :src="recipe.img" class="img-fluid" style="width:50%; height:100%;">
+            </a>
         </div>
-
-        <div class="col-sm-1"></div> <!-- blank --!>
-      </div>
-
-      <div class="row" style="text-align:center;">
-        <div class="col-sm-1"></div> <!-- blank --!>
-        <div class="col-sm" v-for="img in columns[img_name].imgs">
-            <img :src="'images/' + img" class="img-fluid" style="width:100%; height:100%;">
-        </div>
-        <div class="col-sm-1"></div> <!-- blank --!>
+        <div class="col-sm-2"></div> <!-- blank --!>
       </div>
     </div>
 
@@ -60,17 +45,18 @@
         el: "#demo",
         data: {
           searchQuery: "",
-          columns : {
-              "Chicken": {imgs: ["butter_chicken.jpeg", "mapo_tofy.jpg", "shrimp.jpg", "spinach.jpg"]},
-              "Indian": {imgs: ["indian_1.webp", "indian_2.jpg", "indian_3.jpg", "indian_4.jpg"]},
-              "Vegetarian": {},
-              "Seafood" : {},
-              "Beef": {},
-              "Asian": {},
-          },
-          img_name: "Chicken",
-        }
+          recipes : [],
+        },
       });
+
+      // Load recipe list.
+      var recipe_list = JSON.parse(localStorage.getItem('RECIPE_LIST'));
+      localStorage.removeItem('RECIPE_LIST'); // Clear the localStorage
+      for(const index in recipe_list)
+      {
+          recipe = recipe_list[index];
+          demo.recipes.push({"img": recipe.image, "title": recipe.title, "url": recipe.sourceUrl});
+      }
     </script>
 
     <!-- Jquery and bootstrap --!>
