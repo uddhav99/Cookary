@@ -53,7 +53,7 @@
       <div class = "row">
         <div class="col-sm"></div> <!-- blank --!>
         <div class="col-sm-4 confirm_div">
-            <button class="btn btn-primary">Confirm</button>
+            <button class="btn btn-primary" @click="confirm_fun">Confirm</button>
         </div>
         <div class="col-sm"></div> <!-- blank --!>
       </div>
@@ -72,6 +72,9 @@
             {title: "Carbs", entries: ["Rice", "Bread", "Pasta"], bools: [false, false, false]},
             {title: "Vegetable", entries: ["Carrots", "Peppers", "Onions"], bools: [false, false, false]},
           ],
+          confirm_fun: function () {
+              console.log("HI");
+          },
         }
       });
     </script>
