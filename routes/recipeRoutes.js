@@ -63,7 +63,7 @@ module.exports = (app) => {
         // if we get less than 5 recipes from our first API call, then return recipes including only the ingredients and not the specific parameters
         var secondRecipeArray = [];
         if (recipeArray.length < 5) {
-            let ingredients = "Beef,Onion";
+            let ingredients = ingredientList;
             let ingredientUrl = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=5&ignorePantry=true&apiKey=${keys.spoonacularKey}`;
 
             try {

@@ -5,6 +5,7 @@
       color="#70A1D7"
       flat
     >
+
       <div class="d-flex align-center">
         <v-img
           alt="Cookary Logo"
@@ -83,10 +84,23 @@
               min-height="50vh"
               rounded="lg"
             >
-              <Tab1 v-if="tab == '0'"/>
-              <Tab2 v-if="tab == '1'"/>
-              <Tab3 v-if="tab == '2'"/>
-              <Tab4 v-if="tab == '3'"/>
+            <v-btn
+              v-if="tab != 3"
+              class="ml-2 mt-2"
+              fab
+              dark
+              small
+              color="orange lighten-2"
+              @click="tab==2?tab=1:tab=3"
+            >
+              <v-icon dark>
+                mdi-arrow-left
+              </v-icon>
+            </v-btn>
+              <Signatures v-if="tab == '0'" :tab='tab'/>
+              <Filters v-if="tab == '1'" :curTab='tab' @clicked='func'/>
+              <Results v-if="tab == '2'" :tab='tab' :query='fetched'/>
+              <Splash v-if="tab == '3'" :tab='tab' @filters='tab=1' @signatures='tab=0'/>
             </v-sheet>
           </v-col>
         </v-row>
@@ -96,28 +110,37 @@
 </template>
 
 <script>
-import Tab1 from './components/Tab1';
-import Tab2 from './components/Tab2';
-import Tab3 from './components/Tab3';
-import Tab4 from './components/Tab4';
+import Signatures from './components/signatures';
+import Filters from './components/filters';
+import Results from './components/results';
+import Splash from './components/splash';
 
   export default {
     name: 'App',
-
     components: {
-      Tab1,Tab2,Tab3,Tab4,
+      Signatures,Filters,Results,Splash,
     },
 
     data: () => ({
-      tab: null,
+      tab: 3,
+      fetched: [],
       items: [
-        'Tab 1', 'Tab 2', 'Tab 3', 'Tab 4',
+        //'Tab 1', 'Tab 2', 'Tab 3', 'Tab 4',
       ],
     }),
     methods: {
-      whatTab(){
-        console.log(this.tab);
-      }
+      func(tab,data){
+        this.tab = tab;
+        this.fetched = data;
+      },
     }
   }
 </script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Caveat&display=swap');
+
+  .description{
+     font-family: "Caveat";
+  }
+</style>

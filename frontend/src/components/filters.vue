@@ -2,150 +2,116 @@
   <v-container>
     <v-row class="text-center">
       <v-col cols="12">
-        <v-img
-          :src="require('../assets/CookaryLogo.svg')"
-          class="my-3"
-          contain
-          height="200"
-        />
+        <v-img :src="require('../assets/CookaryLogo.svg')" class="my-3" contain height="100" />
+        <p class="description" style="font-size: 40px;">Add Filters</p>
       </v-col>
-
-      <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
-           Tab 1
-        </h1>
-
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br>please join our online
-          <a
-            href="https://community.vuetifyjs.com"
-            target="_blank"
-          >Discord Community</a>
-        </p>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          What's next?
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ next.text }}
-          </a>
+      <!-- Rows and Columns -->
+      
+      <v-container class="grey lighten-5 mb-6">
+        <v-row no-gutters>
+          <v-col v-for="value in obj.radials" :key="value.title">
+            <v-card class="pa-2" outlined tile>
+              {{ value.title }}
+            </v-card>
+          </v-col>
+          <v-col v-for="value in obj.checkboxes" :key="value.title">
+            <v-card class="pa-2" outlined tile>
+              {{ value.title }}
+            </v-card>
+          </v-col>
         </v-row>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Important Links
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ link.text }}
-          </a>
+        <v-row no-gutters>
+          <v-col v-for="value in obj.radials" :key="value.id">
+            <v-card class="pa-2" outlined tile>
+              <v-radio-group v-model="value.selection">
+                <!--p>{{ value.options[value.selection] }}</p-->
+                <v-radio v-for="item in value.options" :key="item" :label="item" />
+              </v-radio-group>
+            </v-card>
+          </v-col>
+          <v-col v-for="value in obj.checkboxes" :key="value.id">
+            <v-card class="pa-2" outlined tile>
+              <!--p>{{ value.selection }}</p-->
+              <v-checkbox class='mt-0' v-for="item in value.options" v-model="value.selection" :key="item" :label="item" :value="item"/>
+            </v-card>
+          </v-col>
         </v-row>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Ecosystem
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ eco.text }}
-          </a>
-        </v-row>
-      </v-col>
+        <v-spacer></v-spacer>
+        <v-btn color="warning" dark @click="func">
+          Confirm
+        </v-btn>
+      </v-container>
+      <!-- -->
     </v-row>
   </v-container>
 </template>
 
 <script>
-  export default {
-    name: 'filters',
-
-    data: () => ({
-      ecosystem: [
-        {
-          text: 'vuetify-loader',
-          href: 'https://github.com/vuetifyjs/vuetify-loader',
+export default {
+  name: 'filters',
+  props: ['query', 'curTab'],
+  methods: {
+    func() {
+      let ingred = []
+      this.user_selections.maxReadyTime = this.obj.radials[0].options[this.obj.radials[0].selection].split(" ")[0];
+      this.user_selections.cuisine = this.obj.radials[1].options[this.obj.radials[1].selection];
+      ingred = ingred.concat(this.obj.checkboxes[0].selection,this.obj.checkboxes[1].selection,this.obj.checkboxes[2].selection);
+      this.user_selections.ingredients = ingred.join(',');
+      
+      let url = new URL('http://localhost:8000/search');
+      url.search = new URLSearchParams({
+          cuisine: this.user_selections.cuisine, // "Italian"
+          ingredients: this.user_selections.ingredients, // "chicken,eggs,beef"
+          maxReadyTime: this.user_selections.maxReadyTime // "30"
+      });
+      console.log('URL:',url);
+      
+      fetch(url)
+      .then(response => response.json())
+      .then(data => {
+          console.log('Data:',data);
+          this.$emit('clicked',2,data);
+      });
+    },
+  },
+  data: () => ({
+    user_selections: {
+      cuisine: "",
+      ingredients: "",
+      maxReadyTime: "600"
+    },
+    obj: {
+        radials:[{
+          id: 0,
+          title: 'Time',
+          selection: 0,
+          options: ['60 minutes', '90 minutes', '120 minutes', '180 minutes'],
         },
         {
-          text: 'github',
-          href: 'https://github.com/vuetifyjs/vuetify',
+          id: 1,
+          title: 'Cuisine',
+          selection: 0,
+          options: ['Indian', 'Italian', 'American', 'Chinese', 'Thai', 'Mexican','Mediterranean','Cajun','African'],
+        }],
+        checkboxes:[{
+          id: 2,
+          title: 'Protein',
+          selection: [],
+          options: ['Chicken', 'Beef', 'Tofu', 'Seafood', 'Turkey', 'Eggs', 'Beans'],
         },
         {
-          text: 'awesome-vuetify',
-          href: 'https://github.com/vuetifyjs/awesome-vuetify',
-        },
-      ],
-      importantLinks: [
-        {
-          text: 'Documentation',
-          href: 'https://vuetifyjs.com',
+          id: 3,
+          title: 'Carbs',
+          selection: [],
+          options: ['Rice', 'Bread', 'Pasta', 'Potato'],
         },
         {
-          text: 'Chat',
-          href: 'https://community.vuetifyjs.com',
+          id: 4,
+          title: 'Vegetables',
+          selection: [],
+          options: ['Broccoli', 'Lettuce', 'Carrot', 'Tomato', 'Garlic', 'Pepper', 'Mushroom'],
         },
-        {
-          text: 'Made with Vuetify',
-          href: 'https://madewithvuejs.com/vuetify',
-        },
-        {
-          text: 'Twitter',
-          href: 'https://twitter.com/vuetifyjs',
-        },
-        {
-          text: 'Articles',
-          href: 'https://medium.com/vuetify',
-        },
-      ],
-      whatsNext: [
-        {
-          text: 'Explore components',
-          href: 'https://vuetifyjs.com/components/api-explorer',
-        },
-        {
-          text: 'Select a layout',
-          href: 'https://vuetifyjs.com/getting-started/pre-made-layouts',
-        },
-        {
-          text: 'Frequently Asked Questions',
-          href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions',
-        },
-      ],
-    }),
-  }
+    ]},
+  }),
+};
 </script>
